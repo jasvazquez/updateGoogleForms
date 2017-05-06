@@ -49,24 +49,24 @@ def getCampos():
 	html = urllib2.urlopen(URL_FORMULARIO).read()
 
 	tree = lxmlhtml.fromstring(html)
-	#r= tree.xpath("//div[contains(@class,'ss-form-entry')]//*[@name]/@name")
-	# TODO distinguir campos de selección múltiple [ para tratarlos correctamente en setRespuestas() ]
 	r= tree.xpath("//input[contains(@name,'entry.')]/@name")
 
 	# Eliminamos nombres de campo duplicados (respetando orden de aparición)
 	c=[ii for n,ii in enumerate(r) if ii not in r[:n]]
-	marcarCamposMultiples(c,r)
-	quit()
-	return 'Marca temporal,'+','.join(c) #+'"'
+	m=getCamposMultiples(c,r)
+
+	return 'Marca temporal,'+','.join(c), m
 
 #-------------------------------------------------------------------------------
 # Simula el envío de datos al formulario web de Google Drive
 #-------------------------------------------------------------------------------
 
-def marcarCamposMultiples(indices, campos):
+def getCamposMultiples(indices, campos):
+	multiples=[]
 	for i in indices:
 		if campos.count(i)>1:
-			print "{I} es un campo múltiple".format(I=i)
+			multiples.append(i)
+	return multiples
 	
 #-------------------------------------------------------------------------------
 # Simula el envío de datos al formulario web de Google Drive
@@ -81,14 +81,15 @@ def setRespuestas():
 	for row in reader:
 		# Anotamos los nombres de los campos (como cabeceras) para futuros usos
 		if rownum == 0:
-			header = getCampos().split(",")
+			header, camposMultiples = getCampos()
+			header=header.split(",")
 		else:
 			colnum = 0
 			payload={}
 			for col in row:
 				if colnum>0:
 					# Gestionamos campos de valores múltiples (checkboxes)
-					if ";" in col:
+					if header[colnum] in camposMultiples:
 						col=col.split(";")
 					payload[header[colnum]]=col
 				colnum += 1
@@ -104,5 +105,4 @@ def setRespuestas():
 		rownum += 1
 
 	ifile.close()
-	
 setRespuestas()
