@@ -37,8 +37,7 @@ import urllib2
 from lxml import html as lxmlhtml
 
 FICHERO_DATOS='./respuestas5.csv'
-URL_FORMULARIO="https://docs.google.com/a/iesalandalus.com/forms/d/e/1FAIpQLSfWeYRsTr68aP208B_L7Cfel1qZ8SH8f4JD3uPDH9iF_j5IUw/formResponse"
-#URL_FORMULARIO="https://docs.google.com/forms/d/e/1FAIpQLSfWeYRsTr68aP208B_L7Cfel1qZ8SH8f4JD3uPDH9iF_j5IUw/formResponse"
+URL_FORMULARIO="https://docs.google.com/forms/d/e/1FAIpQLSfWeYRsTr68aP208B_L7Cfel1qZ8SH8f4JD3uPDH9iF_j5IUw/formResponse"
 
 #-------------------------------------------------------------------------------
 # Obtiene los campos utilizados por el formulario web de Google Drive
