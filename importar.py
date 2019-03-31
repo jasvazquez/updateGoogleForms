@@ -36,7 +36,7 @@ import requests
 import urllib2
 from lxml import html as lxmlhtml
 
-FICHERO_DATOS='./respuestas5.csv'
+FICHERO_DATOS='./respuestas6.csv'
 URL_FORMULARIO="https://docs.google.com/forms/d/e/1FAIpQLSfWeYRsTr68aP208B_L7Cfel1qZ8SH8f4JD3uPDH9iF_j5IUw/formResponse"
 
 #-------------------------------------------------------------------------------
@@ -48,7 +48,7 @@ def getCampos():
 	html = urllib2.urlopen(URL_FORMULARIO).read()
 
 	tree = lxmlhtml.fromstring(html)
-	r= tree.xpath("//input[contains(@name,'entry.')]/@name")
+	r= tree.xpath("//div[contains(@class,'exportFormCard')]//*[@name and contains(@name,'entry.') and not(contains(@name,'sentinel'))]/@name")
 
 	# Eliminamos nombres de campo duplicados (respetando orden de aparición)
 	c=[ii for n,ii in enumerate(r) if ii not in r[:n]]
@@ -90,11 +90,12 @@ def setRespuestas():
 					# Gestionamos campos de valores múltiples (checkboxes)
 					if header[colnum] in camposMultiples:
 						col=col.split(";")
+						payload[header[colnum]+"_sentinel"]=''
 					payload[header[colnum]]=col
 				colnum += 1
 
 			f = requests.post(url=URL_FORMULARIO, data=payload)
-			if "Este contenido no ha sido creado ni aprobado por Google" in f.text:
+			if "Lo sentimos, el archivo que has solicitado no existe." in f.text:
 					print "--"
 					print "Error enviando los datos; revisa los nombres de los campos"
 					print payload
