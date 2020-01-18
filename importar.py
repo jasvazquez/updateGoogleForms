@@ -3,7 +3,7 @@
 
 #-------------------------------------------------------------------------------
 #
-# GoogleFormUpdater v2.0
+# GoogleFormUpdater v3.0
 #
 # Autor: El Informático de Guardia [https://goo.gl/DlxXR]
 # Ayuda: Para más información consulta el artículo https://goo.gl/eziklA
