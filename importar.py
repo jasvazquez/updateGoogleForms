@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/python3
 # coding=UTF-8
 
 #-------------------------------------------------------------------------------
@@ -10,6 +10,8 @@
 #
 # VERSIONES
 # -------------------------------
+#
+#	 3.0 Versión adaptada a Python 3.8.1
 #
 #   2.0 Obtiene, a partir de la URL del formulario web, los campos a utilizar
 #       evitando tener que inyectar jQuery sobre el html.
@@ -33,11 +35,12 @@
 
 import csv
 import requests
-import urllib2
+from urllib import request as urllib
 from lxml import html as lxmlhtml
 
-FICHERO_DATOS='./respuestas6.csv'
+FICHERO_DATOS='./respuestas7.csv'
 URL_FORMULARIO="https://docs.google.com/forms/d/e/1FAIpQLSfWeYRsTr68aP208B_L7Cfel1qZ8SH8f4JD3uPDH9iF_j5IUw/formResponse"
+#URL_FORMULARIO="https://docs.google.com/forms/d/e/1FAIpQLSfWeYRsTr68aP208B_L7Cfel1qZ8SH8f4JD3uPDH9iF_j5IUw/viewform"
 
 #-------------------------------------------------------------------------------
 # Obtiene los campos utilizados por el formulario web de Google Drive
@@ -45,7 +48,7 @@ URL_FORMULARIO="https://docs.google.com/forms/d/e/1FAIpQLSfWeYRsTr68aP208B_L7Cfe
 
 def getCampos():
 
-	html = urllib2.urlopen(URL_FORMULARIO).read()
+	html = urllib.urlopen(URL_FORMULARIO).read()
 
 	tree = lxmlhtml.fromstring(html)
 	r= tree.xpath("//div[contains(@class,'exportFormCard')]//*[@name and contains(@name,'entry.') and not(contains(@name,'sentinel'))]/@name")
@@ -73,7 +76,7 @@ def getCamposMultiples(indices, campos):
 
 def setRespuestas():
 
-	ifile  = open(FICHERO_DATOS, "rb")
+	ifile  = open(FICHERO_DATOS, "r")
 	reader = csv.reader(ifile)
 
 	rownum = 0
@@ -96,13 +99,14 @@ def setRespuestas():
 
 			f = requests.post(url=URL_FORMULARIO, data=payload)
 			if "Lo sentimos, el archivo que has solicitado no existe." in f.text:
-					print "--"
-					print "Error enviando los datos; revisa los nombres de los campos"
-					print payload
-					print "--"
+					print("--")
+					print("Error enviando los datos; revisa los nombres de los campos")
+					print(payload)
+					print("--")
 			else:
-					print ".",
+					print(".", end = '')
 		rownum += 1
 
+	print("")
 	ifile.close()
 setRespuestas()
